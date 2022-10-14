@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\RubyController.cs" />
+    <Compile Include="Assets\Scripts\HealthCollectible.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\2DBeginner_Third-PartyNotice.txt" />
