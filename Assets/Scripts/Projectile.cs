@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     Rigidbody2D rigidbody2d;
+    public ParticleSystem hitEffect;
     // Start is called before the first frame update
     void Awake()
     {
@@ -26,16 +27,22 @@ public class Projectile : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        GameObject.Instantiate<ParticleSystem>(hitEffect, collision.collider.gameObject.transform);
         Debug.Log(collision.gameObject);
         Debug.Log(collision.collider);
-        EnemyController e = collision.collider.GetComponent<EnemyController>();
-        if(e != null)
-        {
-            e.Fix();
-        }
 
+
+
+        EnemyController e = collision.collider.GetComponent<EnemyController>();
+        if (e != null)
+        {
+            GameObject.Instantiate<ParticleSystem>(hitEffect, e.gameObject.transform);
+            e.Fix();
+                
+        }
         Debug.Log("Projectile Collistion with" + collision.gameObject);
-        if(collision.gameObject.GetComponent<RubyController>() == null)
-            Destroy(gameObject);
+
+        
+        Destroy(gameObject);
     }
 }

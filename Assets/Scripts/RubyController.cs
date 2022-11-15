@@ -20,8 +20,7 @@ public class RubyController : MonoBehaviour
 
     float horizontal;
     float vertical;
-    
-
+    int offset=1;
 
     Animator animator;
     Vector2 lookDirection = new Vector2(1, 0);
@@ -41,6 +40,7 @@ public class RubyController : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
+        offset = Input.GetKey(KeyCode.X)?2:1;
 
         Vector2 move = new Vector2(horizontal, vertical);
 
@@ -77,8 +77,8 @@ public class RubyController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector2 position = transform.position;
-        position.x = position.x + speed * horizontal * Time.deltaTime;
-        position.y = position.y + speed * vertical * Time.deltaTime;
+        position.x = position.x + offset*speed * horizontal * Time.deltaTime;
+        position.y = position.y + offset*speed * vertical * Time.deltaTime;
 
         rigidbody2d.MovePosition(position);
 
@@ -86,8 +86,9 @@ public class RubyController : MonoBehaviour
 
     public void ChangeHealth(int amount)
     {
-
-        if(amount < 0)
+        Debug.Log(UIHealthBar.instance);
+        Debug.Log(UIHealthBar.instance.ToString() + "/" + maxHealth);
+        if (amount < 0)
         {
             animator.SetTrigger("Hit");
             if (isInvincible) return;
@@ -96,6 +97,7 @@ public class RubyController : MonoBehaviour
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        Debug.Log(currentHealth + "/" + maxHealth);
+        UIHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
+        Debug.Log(UIHealthBar.instance.ToString() + "/" + maxHealth);
     }
 }

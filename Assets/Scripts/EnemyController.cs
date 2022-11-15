@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public float speed = 15.0f;
     public float changeTime = 0.5f;
     public bool vertical;
+    public ParticleSystem smokeEffect;
     bool broken = true;
 
     Rigidbody2D rigidbody2D;
@@ -42,7 +43,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log("broken " + broken);
+        //Debug.Log("broken " + broken);
         if (!broken)
         {
             Debug.Log("broken is false " + broken);
@@ -79,7 +80,8 @@ public class EnemyController : MonoBehaviour
     public void Fix()
     {
         broken = false;
-        rigidbody2D.simulated = false;
+        //rigidbody2D.simulated = false;
         animator.SetTrigger("Fixed");
+        smokeEffect.Stop();
     }
 }
