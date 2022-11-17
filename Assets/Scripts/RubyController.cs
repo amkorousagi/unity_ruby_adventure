@@ -10,6 +10,7 @@ public class RubyController : MonoBehaviour
     public float timeInvincible = 2.0f;
     public int health { get { return currentHealth; } }
     public GameObject projectilePrefab;
+    public Footstep footstep;
 
     int currentHealth;
 
@@ -25,6 +26,8 @@ public class RubyController : MonoBehaviour
     Animator animator;
     Vector2 lookDirection = new Vector2(1, 0);
 
+    AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,9 +35,13 @@ public class RubyController : MonoBehaviour
         //Application.targetFrameRate = 10;
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
         currentHealth = maxHealth;
     }
-
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -64,6 +71,18 @@ public class RubyController : MonoBehaviour
         {
             Launch();
         }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+            if(hit.collider != null)
+            {
+                NonPlayerCharacter character = hit.collider.GetComponent<NonPlayerCharacter>();
+                if(character != null)
+                {
+                    character.DisplayDialog();
+                }
+            }
+        }
     }
     void Launch()
     {
@@ -79,15 +98,22 @@ public class RubyController : MonoBehaviour
         Vector2 position = transform.position;
         position.x = position.x + offset*speed * horizontal * Time.deltaTime;
         position.y = position.y + offset*speed * vertical * Time.deltaTime;
-
+        if(horizontal>0 | vertical > 0)
+        {
+            footstep.PlayFootstep();
+        }
+        else
+        {
+            footstep.StopFootstep();
+        }
         rigidbody2d.MovePosition(position);
 
     }
 
     public void ChangeHealth(int amount)
     {
-        Debug.Log(UIHealthBar.instance);
-        Debug.Log(UIHealthBar.instance.ToString() + "/" + maxHealth);
+        //Debug.Log(UIHealthBar.instance);
+        //Debug.Log(UIHealthBar.instance.ToString() + "/" + maxHealth);
         if (amount < 0)
         {
             animator.SetTrigger("Hit");
@@ -98,6 +124,6 @@ public class RubyController : MonoBehaviour
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         UIHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
-        Debug.Log(UIHealthBar.instance.ToString() + "/" + maxHealth);
+        //Debug.Log(UIHealthBar.instance.ToString() + "/" + maxHealth);
     }
 }

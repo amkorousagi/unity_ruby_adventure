@@ -46,7 +46,7 @@ public class EnemyController : MonoBehaviour
         //Debug.Log("broken " + broken);
         if (!broken)
         {
-            Debug.Log("broken is false " + broken);
+            //Debug.Log("broken is false " + broken);
             return;
         }
         Vector2 position = rigidbody2D.position;

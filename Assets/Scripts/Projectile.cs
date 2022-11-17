@@ -5,11 +5,14 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     Rigidbody2D rigidbody2d;
+    AudioSource audioSource;
     public ParticleSystem hitEffect;
+    public List<AudioClip> audioClip;
     // Start is called before the first frame update
     void Awake()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -30,8 +33,10 @@ public class Projectile : MonoBehaviour
         GameObject.Instantiate<ParticleSystem>(hitEffect, collision.collider.gameObject.transform);
         Debug.Log(collision.gameObject);
         Debug.Log(collision.collider);
-
-
+        Debug.Log(Random.Range(0, 10) < 5 ? audioClip[0] : audioClip[1]);
+        AudioClip a = Random.Range(0, 10) < 5 ? audioClip[0] : audioClip[1];
+        audioSource.PlayOneShot(a);
+        
 
         EnemyController e = collision.collider.GetComponent<EnemyController>();
         if (e != null)
@@ -43,6 +48,6 @@ public class Projectile : MonoBehaviour
         Debug.Log("Projectile Collistion with" + collision.gameObject);
 
         
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }
